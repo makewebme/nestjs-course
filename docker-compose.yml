@@ -1,0 +1,40 @@
+version: '3.5'
+
+services:
+  nest_test_postgres:
+    container_name: nest_test_postgres
+    image: postgres:14
+    environment:
+      POSTGRES_USER: nest_test
+      POSTGRES_PASSWORD: nest_test
+      PGDATA: /data/postgres
+    volumes:
+       - postgres:/var/www/nest_test/docker-volumes/postgres
+    ports:
+      - 127.0.0.1:5432:5432
+    networks:
+      - nest_test
+    restart: unless-stopped
+
+  nest_test_pgadmin:
+    container_name: nest_test_pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: nest_test@admin.com
+      PGADMIN_DEFAULT_PASSWORD: nest_test
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+       - pgadmin:/var/www/nest_test/docker-volumes/pgadmin
+    ports:
+      - 127.0.0.1:5050:80
+    networks:
+      - nest_test
+    restart: unless-stopped
+
+networks:
+  nest_test:
+    driver: bridge
+
+volumes:
+  postgres:
+  pgadmin:
